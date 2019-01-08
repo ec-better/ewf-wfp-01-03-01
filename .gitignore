@@ -5,6 +5,7 @@ __pycache__
 
 runc
 .ipynb_checkpoints
+*.properties
 *.tif
 *.nc
 *.lut
