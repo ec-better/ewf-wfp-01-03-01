@@ -37,13 +37,13 @@ def write_output_image(filepath, output_matrix, image_format, mask=None, output_
     out_rows = np.size(output_matrix, 0)
     out_columns = np.size(output_matrix, 1)
     if mask is not None and mask is not 0:
-        output = driver.Create(filepath, out_rows, out_columns, 2, gdal.GDT_Float32)
+        output = driver.Create(filepath, out_columns, out_rows, 2, gdal.GDT_Float32)
         mask_band = output.GetRasterBand(2)
         mask_band.WriteArray(mask)
         if no_data_value is not None:
             output_matrix[mask > 0] = no_data_value
     else:
-        output = driver.Create(filepath, out_rows, out_columns, 1, gdal.GDT_Float32)
+        output = driver.Create(filepath, out_columns, out_rows, 1, gdal.GDT_Float32)
     
     if output_projection is not None:
         output.SetProjection(output_projection)
