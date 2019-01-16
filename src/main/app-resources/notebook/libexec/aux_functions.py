@@ -72,3 +72,12 @@ def calc_average(matrix_list, n_matrix, no_data_value=None):
         result = matrix_sum(result, matrix_list[i], no_data_value)
     
     return np.divide(result, (n_matrix*1.00))
+
+def get_matrix_list(image_list):
+    mat_list = []
+    for img in image_list:
+        dataset = gdal.Open(img)
+        product_array = dataset.GetRasterBand(1).ReadAsArray()
+        mat_list.append(product_array)
+        dataset = None
+    return mat_list
