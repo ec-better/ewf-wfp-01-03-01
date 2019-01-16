@@ -11,7 +11,7 @@
     <version>2.0.0</version>
   </parent>
   <description>COPERNICUS Vegetation Indicators - Aggregations</description>
-  <version>1.2</version>
+  <version>1.3-SNAPSHOT</version>
   <properties>
     <summary>COPERNICUS Vegetation Indicators - Aggregations</summary>
     <description>COPERNICUS Vegetation Indicators - Aggregations</description>
