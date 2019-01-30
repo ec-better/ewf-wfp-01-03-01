@@ -39,9 +39,10 @@ curl=7.49.0=1
 cycler=0.10.0=py27_0
 dbus=1.10.10=0
 decorator=4.0.11=py27_0
+deprecated=1.2.4=py27h191d90e_0
 descartes=1.1.0=py27h5233db4_0
 docutils=0.14=py27hae222c1_0
-ellip_triggers=0.0.11=py27h93fe300_0
+ellip_triggers=0.7.6=py27h27d8078_0
 entrypoints=0.2.2=py27_0
 enum34=1.1.6=py27_0
 expat=2.1.0=0
@@ -76,6 +77,7 @@ idna=2.2=py27_0
 imagesize=0.7.1=py27hd17bf80_0
 intel-openmp=2018.0.0=hc7b2577_8
 ipaddress=1.0.18=py27_0
+iplantuml=0.1.1=py27ha60a354_0
 ipykernel=4.5.2=py27_0
 ipython=5.7.0=py27_0
 ipython_genutils=0.1.0=py27_0
@@ -121,6 +123,7 @@ multi_key_dict=2.0.3=py27h863ab3d_0
 munch=2.2.0=py27_0
 nbconvert=5.3.1=py27he041f76_0
 nbformat=4.4.0=py27hed7f2b2_0
+nbmerge=0.0.4=py27hd8875e8_0
 nbsphinx=0.3.3=py_0
 ncurses=5.9=10
 netcdf4=1.2.4=np113py27_0
@@ -149,6 +152,7 @@ pillow=3.4.2=py27_0
 pip=8.1.2=py27_0
 pixman=0.34.0=0
 pkginfo=1.4.1=py27hee1a9ad_1
+plantweb=1.1.0=py27hb9d5bb6_0
 plotly=2.1.0=py27h77e25ac_0
 proj4=4.9.3=hc8507d1_7
 prompt_toolkit=1.0.9=py27_0
