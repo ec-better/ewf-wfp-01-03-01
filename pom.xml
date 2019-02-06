@@ -11,7 +11,7 @@
     <version>3.0.1-docker</version>
   </parent>
   <description>COPERNICUS Vegetation Indicators - Aggregations</description>
-  <version>1.3</version>
+  <version>1.4</version>
   <properties>
     <summary>COPERNICUS Vegetation Indicators - Aggregations</summary>
     <description>COPERNICUS Vegetation Indicators - Aggregations</description>
