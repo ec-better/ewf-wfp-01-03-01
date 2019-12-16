@@ -32,7 +32,8 @@ def crop_image(input_image, polygon_wkt, output_path, product_type=None):
     polygon_ogr = ogr.CreateGeometryFromWkt(polygon_wkt)
     envelope = polygon_ogr.GetEnvelope()
     bounds = [envelope[0], envelope[2], envelope[1], envelope[3]]
-    gdal.Warp(output_path, dataset, format="GTiff", outputBoundsSRS='EPSG:4326', outputBounds=bounds, srcNodata=no_data_value, dstNodata=no_data_value, xRes=geo_t[1], yRes=-geo_t[5], targetAlignedPixels=True)
+    
+    gdal.Warp(output_path, dataset, format="GTiff", outputBounds=bounds, srcNodata=no_data_value, dstNodata=no_data_value)
     
 def write_output_image(filepath, output_matrix, image_format, data_format, mask=None, output_projection=None, output_geotransform=None, no_data_value=None):
     driver = gdal.GetDriverByName(image_format)
