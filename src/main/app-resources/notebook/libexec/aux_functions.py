@@ -32,18 +32,24 @@ def crop_image(input_image, polygon_wkt, output_path, product_type=None):
     polygon_ogr = ogr.CreateGeometryFromWkt(polygon_wkt)
     envelope = polygon_ogr.GetEnvelope()
     bounds = [envelope[0], envelope[2], envelope[1], envelope[3]]
-    gdal.Warp(output_path, dataset, format="GTiff", outputBoundsSRS='EPSG:4326', outputBounds=bounds, srcNodata=no_data_value, dstNodata=no_data_value, xRes=geo_t[1], yRes=-geo_t[5], targetAlignedPixels=True)
+    
+    gdal.Warp(output_path, dataset, format="GTiff", outputBoundsSRS='EPSG:4326', outputBounds=bounds, srcNodata=no_data_value, dstNodata=no_data_value)
     
 def write_output_image(filepath, output_matrix, image_format, data_format, mask=None, output_projection=None, output_geotransform=None, no_data_value=None):
+    
     driver = gdal.GetDriverByName(image_format)
+    
     out_rows = np.size(output_matrix, 0)
     out_columns = np.size(output_matrix, 1)
+    
+    output = driver.Create(filepath, out_columns, out_rows, 1, data_format)
+    
     if mask is not None and mask is not 0:
-        output = driver.Create(filepath, out_columns, out_rows, 2, data_format)
-        mask_band = output.GetRasterBand(2)
-        mask_band.WriteArray(mask)
+            
         if no_data_value is not None:
+            
             output_matrix[mask > 0] = no_data_value
+            
     else:
         output = driver.Create(filepath, out_columns, out_rows, 1, data_format)
     
@@ -53,10 +59,14 @@ def write_output_image(filepath, output_matrix, image_format, data_format, mask=
         output.SetGeoTransform(output_geotransform)
     
     raster_band = output.GetRasterBand(1)
+    
     if no_data_value is not None:
         raster_band.SetNoDataValue(no_data_value)
+        
     raster_band.WriteArray(output_matrix)
-    gdal.Warp(filepath, output, format="GTiff", outputBoundsSRS='EPSG:4326', xRes=output_geotransform[1], yRes=-output_geotransform[5], targetAlignedPixels=True)
+    
+    gdal.Warp(filepath, output, format="GTiff", outputBoundsSRS='EPSG:4326')
+    
     
 def calc_max_matrix(mat1, mat2, no_data_value=None):
     if no_data_value is not None:
