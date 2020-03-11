@@ -1,3 +1,4 @@
+
 #!/opt/anaconda/bin/python
 
 import sys
@@ -77,14 +78,77 @@ def calc_max_matrix(mat1, mat2, no_data_value=None):
     
     return np.where(mat1 > mat2, mat1, mat2)
 
-def calc_average(matrix_list, n_matrix, no_data_value=None):
-    if not matrix_list:
-        return 0
-    result = matrix_list[0]
-    for i in range(1, n_matrix):
-        result = matrix_sum(result, matrix_list[i], no_data_value)
+#
+# sums mat1 to mat2
+# adds 1 to mat_n_vals where != no_data_value 
+#
+def matrix_sum_for_avg(mat1, mat2, mat_n_vals, no_data_value):
+
+    no_data_value_alt = -9999
     
-    return np.divide(result, (n_matrix*1.00))
+    mat2_0and1s = np.zeros(mat2.shape)
+    
+    mat2_0and1s[mat2 != no_data_value] = 1
+    
+    
+    mat_n_vals = mat2_0and1s;
+    
+    
+    #msum = mat1
+    
+    msum = np.copy(mat1)
+    
+    msum[mat2 != no_data_value] = mat1[mat2 != no_data_value] + mat2[mat2 != no_data_value]
+    
+    msum = np.where(np.logical_and(mat1 == no_data_value_alt, mat2 != no_data_value), mat2, msum)
+    
+    msum[np.logical_and(mat1 == no_data_value_alt, mat2 == no_data_value) ] = no_data_value
+
+    
+    
+    #msum = mat1 + mat2
+
+    return msum, mat_n_vals
+
+
+#
+# calcs avg of matrix_list
+# it takes into account pixels with no_data_values in the time series 
+# faster than calc_average_circular_mean
+#
+def calc_average(matrix_list, n_matrix, no_data_value=None):
+
+    no_data_value_alt = -9999
+    
+    if not isinstance(matrix_list, list):
+        return 0
+    
+    result = np.copy(matrix_list[0])
+    
+    result = np.where(result == no_data_value, no_data_value_alt, result)
+  
+    mat_n_vals = np.zeros(result.shape)
+    mat_n_vals[result != no_data_value_alt] = 1
+    
+    for i in range(1, len(matrix_list)):
+     
+        result, mat_n_vals_of_sum = matrix_sum_for_avg(result, matrix_list[i], mat_n_vals, no_data_value)
+        
+        #result = np.copy(result_temp)
+        
+        mat_n_vals = mat_n_vals + mat_n_vals_of_sum
+    
+
+    # to avoid division by 0!!
+    mat_n_vals[mat_n_vals == 0] = no_data_value_alt
+
+    result = np.divide(result, mat_n_vals)
+    
+    # set as no data value pixels that are no data values in all time series
+    result[mat_n_vals == no_data_value_alt] = no_data_value
+    
+    return result
+
 
 def get_matrix_list(image_list):
     mat_list = []
