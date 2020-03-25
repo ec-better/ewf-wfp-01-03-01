@@ -1,11 +1,11 @@
-
 #!/opt/anaconda/bin/python
 
 import sys
 import os
 import string
 import numpy as np
-from osgeo import gdal, ogr, osr
+import gdal
+from osgeo import ogr, osr
 from shapely.wkt import loads
 
 def matrix_sum(mat1, mat2, no_data_value=None):
@@ -16,11 +16,11 @@ def matrix_sum(mat1, mat2, no_data_value=None):
             mat2[(mat2 == no_data_value)] = 0
     return mat1 + mat2
 
+    
 def crop_image(input_image, polygon_wkt, output_path, product_type=None):
+    
     dataset = None
-    crop_directory = os.path.dirname(output_path)
-    if crop_directory is not '' and not os.path.exists(crop_directory):
-        os.makedirs(crop_directory)
+        
     if input_image.startswith('ftp://') or input_image.startswith('http'):
         try:
             dataset = gdal.Open('/vsigzip//vsicurl/%s' % input_image)
@@ -28,14 +28,16 @@ def crop_image(input_image, polygon_wkt, output_path, product_type=None):
             print(e)
     elif '.nc' in input_image:
         dataset = gdal.Open('NETCDF:' + input_image + ':' + product_type)
-    no_data_value = dataset.GetRasterBand(1).GetNoDataValue()
-    geo_t = dataset.GetGeoTransform()
+
     polygon_ogr = ogr.CreateGeometryFromWkt(polygon_wkt)
     envelope = polygon_ogr.GetEnvelope()
-    bounds = [envelope[0], envelope[2], envelope[1], envelope[3]]
-    
-    gdal.Warp(output_path, dataset, format="GTiff", outputBoundsSRS='EPSG:4326', outputBounds=bounds, srcNodata=no_data_value, dstNodata=no_data_value)
-    
+    bounds = [envelope[0], envelope[3], envelope[1], envelope[2]]         
+
+    gdal.Translate(output_path, dataset, outputType=gdal.GDT_Float32, projWin=bounds, projWinSRS='EPSG:4326')
+
+    dataset = None
+
+
 def write_output_image(filepath, output_matrix, image_format, data_format, mask=None, output_projection=None, output_geotransform=None, no_data_value=None):
     
     driver = gdal.GetDriverByName(image_format)
